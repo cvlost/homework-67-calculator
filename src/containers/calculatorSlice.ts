@@ -1,11 +1,18 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
+interface logResult {
+  expression: string;
+  result: string;
+}
+
 interface CalculatorState {
   display: string;
+  log: logResult[];
 }
 
 const initialState: CalculatorState = {
   display: '',
+  log: [],
 }
 
 export const calculatorSlice = createSlice({
@@ -35,8 +42,16 @@ export const calculatorSlice = createSlice({
 
       try {
        result = eval(state.display).toString();
+        state.log.push({
+          expression: state.display,
+          result,
+        });
       } catch (e) {
-        console.log(e);
+        console.error(e);
+        state.log.push({
+          expression: state.display,
+          result: 'error',
+        });
       } finally {
         state.display = result;
       }
